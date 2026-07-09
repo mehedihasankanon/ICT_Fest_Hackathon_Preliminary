@@ -1,4 +1,4 @@
----
+# Bug Report
 
 **File and line number(s)**: [app/routers/bookings.py](app/routers/bookings.py#L86)
 **The bug**: Grace window allowed bookings that started up to 5 minutes in the past to be created, violating the rule that `start_time` must be strictly in the future. This could let users create bookings that overlap or start immediately, breaking scheduling guarantees.
@@ -57,8 +57,6 @@
 **File and line number(s)**: [app/routers/bookings.py](app/routers/bookings.py#L3)
 **The bug**: Rounding change required a decimal import but it wasn't present.
 **How you fixed it**: Added `from decimal import Decimal, ROUND_HALF_UP` at the top of the file and used `Decimal` for refund calculations.
-
----
 
 ---
 
