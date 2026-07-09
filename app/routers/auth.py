@@ -35,12 +35,7 @@ def register(payload: RegisterRequest, db: Session = Depends(get_db)):
         .first()
     )
     if existing is not None:
-        return {
-            "user_id": existing.id,
-            "org_id": org.id,
-            "username": existing.username,
-            "role": existing.role,
-        }
+        raise AppError(409, "USERNAME_TAKEN", "Username already taken")
 
     user = User(
         org_id=org.id,
@@ -86,6 +81,8 @@ def refresh(payload: RefreshRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == int(data["sub"])).first()
     if user is None:
         raise AppError(401, "UNAUTHORIZED", "Unknown user")
+    # Invalidate the presented refresh token (single-use refresh token semantics)
+    revoke_access_token(data)
     return {
         "access_token": create_access_token(user),
         "refresh_token": create_refresh_token(user),
