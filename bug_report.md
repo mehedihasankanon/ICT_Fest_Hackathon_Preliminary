@@ -66,12 +66,6 @@
 
 ---
 
-**File and line number(s)**: [app/routers/admin.py](app/routers/admin.py#L3-L22)
-**What the bug was** (B - Timezone TypeError): `usage_report` constructed naive `range_start`/`range_end` datetimes; comparing them to timezone-aware `Booking.start_time` caused `TypeError` in queries.
-**How you fixed it**: Imported `timezone` and made the range bounds timezone-aware with `.replace(tzinfo=timezone.utc)` so DB comparisons succeed.
-
----
-
 **File and line number(s)**: [app/routers/admin.py](app/routers/admin.py#L10-L40)
 **What the bug was** (C - Stale caching): `usage_report` read from and wrote to a cache, but booking creation didn't invalidate the cache, so reports could be stale.
 **How you fixed it**: Removed the cache read/write for `usage_report` so the endpoint always queries the live database and reflects current state immediately.
